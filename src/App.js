@@ -1,24 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import './App.scss';
+import { CategoryPage } from "./pages";
+import { BoxedLayout } from "./layouts/BoxedLayout";
+
+const products = [
+  { id:1, name: "product 1", price: "50.00", image: "https://via.placeholder.com/300", inStock: true, image: "https://collectionapi.metmuseum.org/api/collection/v1/iiif/107620/1358492/main-image" },
+  { id:2, name: "product 2", price: "50.00", image: "https://via.placeholder.com/300", inStock: true, image: "https://collectionapi.metmuseum.org/api/collection/v1/iiif/107620/1358492/main-image" },
+  { id:3, name: "product 3", price: "50.00", image: "https://via.placeholder.com/300", inStock: true, image: "https://collectionapi.metmuseum.org/api/collection/v1/iiif/107620/1358492/main-image" },
+  { id:4, name: "product 4", price: "50.00", image: "https://via.placeholder.com/300", inStock: true, image: "https://collectionapi.metmuseum.org/api/collection/v1/iiif/107620/1358492/main-image" },
+  { id:5, name: "product 5", price: "50.00", image: "https://via.placeholder.com/300", inStock: true, image: "https://collectionapi.metmuseum.org/api/collection/v1/iiif/107620/1358492/main-image" },
+  { id:6, name: "product 6", price: "50.00", image: "https://via.placeholder.com/300", inStock: true, image: "https://collectionapi.metmuseum.org/api/collection/v1/iiif/107620/1358492/main-image" },
+];
 
 function App() {
   return (
+    <Router>
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Switch>
+        <Route exact path="/">
+          <BoxedLayout>
+            <CategoryPage categoryName="WOMEN" products={products} />
+          </BoxedLayout>
+        </Route>
+        <Route exact path="/men">
+          <BoxedLayout>
+            <CategoryPage categoryName="MEN" products={products} />
+          </BoxedLayout>
+        </Route>
+        <Route exact path="/kids">
+          <BoxedLayout>
+            <CategoryPage categoryName="KIDS" products={products} />
+          </BoxedLayout>
+        </Route>
+      </Switch>
     </div>
+    </Router>
   );
 }
 
