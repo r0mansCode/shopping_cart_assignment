@@ -1,8 +1,23 @@
-.homepage-section {
-    &__products-list {
+.category-page {
+    width: 100%;
+    display: flex;
+    position: relative;
+    z-index: 5;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+
+    &__title {
+        font-weight: 400;
+        font-size: 42px;
+        padding: 80px 0;
+    }
+
+    &__products {
+        width: 100%;
         display: grid;
         grid-template-columns: auto auto auto;
-        grid-column-gap: 100px;
+        grid-column-gap: 50px;
         grid-row-gap: 50px;
     }
 }

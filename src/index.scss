@@ -2,6 +2,9 @@
 :root {
   --c-primary: #5ece7b;
   --c-text: #1d1f22;
+
+  --s-text-menu: 16px;
+  --w-text-menu: 600;
 }
 
 // SOFT RESET
@@ -20,7 +23,6 @@ html {
 html,
 body,
 #root {
-  height: 100vh;
   padding: 0;
   margin: 0;
 }
@@ -40,32 +42,23 @@ ul {
 
 img {
   max-width: 100%;
+  width: 100%;
 }
 
 a {
+  color: var(--c-text);
   text-decoration: none;
-  cursor: pointer;
 }
 
-// a,
-// a:hover {
-//   -webkit-transition: all 0.2s ease-in;
-//   -moz-transition: all 0.2s ease-in;
-//   transition: all 0.2s ease-in;
-// }
-
 h2 {
-  /* Heading / Desktop / H2 */
   font-style: normal;
   font-weight: normal;
   font-size: 42px;
   line-height: 160%;
-  /* identical to box height, or 67px */
-
-  color: #1d1f22;
+  color: var(--c-text);
 }
 
-.material-font {
+.material-icons-outlined {
   font-family: 'Material Icons Outlined';
   font-weight: normal;
   font-style: normal;

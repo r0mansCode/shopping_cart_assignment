@@ -1,16 +1,19 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { ProductCard } from "../../components/ProductCard/ProductCard";
 import './CategoryPage.scss';
 
-export class CategoryPage extends Component {
+class CategoryPage extends Component {
     render() {
+        const { products, categoryName} = this.props;
         return (
-            <section className="homepage-section category">
-                <h2 className="category__name">{this.props.categoryName}</h2>
-                <div className="homepage-section__products-list">
-                    {this.props.products.map((product) => {
-                        return <ProductCard key={product.id} name={product.name} price={product.price} inStock={product.inStock} imageUri={product.image}/>;
+            <section className="category-page">
+                <h2 className="category-page__title">
+                    {categoryName}
+                </h2>
+                <div className="category-page__products">
+                    { products.map((product) => {
+                        return (<ProductCard key={product.id} product={product}/>);
                     })}
                 </div>
             </section>
@@ -18,9 +21,10 @@ export class CategoryPage extends Component {
     }
 }
 
-CategoryPage.propTypes = {
-    categoryName: PropTypes.string.isRequired,
-    products: PropTypes.array.isRequired,
-};
+const mapStageToProps = (state) => {
+    return {
+        products: state.shop.products,
+    }
+}
 
-export default CategoryPage;
+export default connect(mapStageToProps)(CategoryPage);

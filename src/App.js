@@ -1,41 +1,56 @@
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import React, { Component } from 'react';
+import { Switch, Route } from "react-router-dom";
 import './App.scss';
 import { CategoryPage } from "./pages";
-import { BoxedLayout } from "./layouts/BoxedLayout";
+import { Header } from "./components/Header/Header";
+import { connect } from "react-redux";
+import { toggleCart, toggleCurrency } from './redux/Shopping/shopping-actions';
 
-const products = [
-  { id:1, name: "product 1", price: "50.00", inStock: true, image: "https://collectionapi.metmuseum.org/api/collection/v1/iiif/107620/1358492/main-image" },
-  { id:2, name: "product 2", price: "50.00", inStock: false, image: "https://collectionapi.metmuseum.org/api/collection/v1/iiif/107620/1358492/main-image" },
-  { id:3, name: "product 3", price: "50.00", inStock: true, image: "https://collectionapi.metmuseum.org/api/collection/v1/iiif/107620/1358492/main-image" },
-  { id:4, name: "product 4", price: "50.00", inStock: true, image: "https://collectionapi.metmuseum.org/api/collection/v1/iiif/107620/1358492/main-image" },
-  { id:5, name: "product 5", price: "50.00", inStock: true, image: "https://collectionapi.metmuseum.org/api/collection/v1/iiif/107620/1358492/main-image" },
-  { id:6, name: "product 6", price: "50.00", inStock: true, image: "https://collectionapi.metmuseum.org/api/collection/v1/iiif/107620/1358492/main-image" },
-];
+class App extends Component {
 
-function App() {
-  return (
-    <Router>
-    <div className="App">
-      <Switch>
-        <Route exact path="/">
-          <BoxedLayout>
-            <CategoryPage categoryName="WOMEN" products={products} />
-          </BoxedLayout>
-        </Route>
-        <Route exact path="/men">
-          <BoxedLayout>
-            <CategoryPage categoryName="MEN" products={products} />
-          </BoxedLayout>
-        </Route>
-        <Route exact path="/kids">
-          <BoxedLayout>
-            <CategoryPage categoryName="KIDS" products={products} />
-          </BoxedLayout>
-        </Route>
-      </Switch>
+  closeCartAndCurrencyIfOpen = (cartIsOpen, currencyIsOpen, toggleCart, toggleCurrency) => {
+    if(cartIsOpen) {
+      toggleCart();
+    } else if(currencyIsOpen) {
+      toggleCurrency();
+    } else return;
+  }
+
+  render() {
+    const { cart, currency, toggleCart, toggleCurrency } = this.props;
+    return (
+      <div className="app">
+      <Header />
+      <div onClick={() => this.closeCartAndCurrencyIfOpen(cart.isOpen, currency.isOpen, toggleCart, toggleCurrency)} className={`app__container ${cart.isOpen ? 'app__container--cart-open' : ''}`}>
+        <Switch>
+          <Route exact path="/">
+            <CategoryPage categoryName="WOMEN" />
+          </Route>
+          <Route path="/men">
+            <CategoryPage categoryName="MEN" />
+          </Route>
+          <Route exact path="/kids">
+            <CategoryPage categoryName="KIDS" />
+          </Route>
+        </Switch>
+      </div>
     </div>
-    </Router>
-  );
+    )
+  }
 }
 
-export default App;
+const mapStateToProps = state => {
+  return {
+    cart: state.shop.cart,
+    currency: state.shop.currency,
+  }
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    toggleCart: () => dispatch(toggleCart()),
+    toggleCurrency: () => dispatch(toggleCurrency()),
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

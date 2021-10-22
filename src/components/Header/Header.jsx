@@ -2,108 +2,105 @@ import React, { Component } from 'react';
 import { Link, NavLink } from "react-router-dom";
 import logo from "../../assets/logo-x512.png";
 import "./Header.scss";
+import { CartProductTile } from '../index';
+import { connect } from "react-redux";
+import { toggleCart, toggleCurrency } from '../../redux/Shopping/shopping-actions';
 
 export class Header extends Component {
-    state = {
-        cart: {
-            cartItems: 2,
-            cartTotal: "$150.00",
-            isOpen: false,
-        },
-    };
-
-    toggleCartVisibility = (e) => {
-        if( e.target.classList.value === 'cart-open-blur' || e.target.classList.value === 'material-font material-icons-outlined') {
-            this.setState({
-                cart: {
-                    ...this.state.cart,
-                    isOpen: !this.state.cart.isOpen,
-                }
-            });
+    openCart = () => {
+        if(this.props.currency.isOpen) {
+          this.props.toggleCurrency();
         }
-    }
-    render() {
+        this.props.toggleCart();
+      }
+    
+      openCurrency = () => {
+        // if(this.props.cart.isOpen) {
+        //   this.props.toggleCart();
+        // }
+        // this.props.toggleCurrency();
+      }
+      render() {
+          console.log(this.props)
+        const { cart, currency } = this.props;
         return (
-            <>
-            <header className="main-header">
-                {/* NAVIGATION MENU */}
-                <nav className="main-header__navigation">
-                    <ul className="nav">
-                        <li className="nav__item">
-                            <NavLink to="/" exact activeClassName="nav__link--active" className="nav__link">WOMEN</NavLink> 
-                        </li>
-                        <li className="nav__item">
-                            <NavLink to="/men" exact activeClassName="nav__link--active" className="nav__link">MEN</NavLink>  
-                        </li>
-                        <li className="nav__item">
-                            <NavLink to="/kids" exact activeClassName="nav__link--active" className="nav__link">KIDS</NavLink>  
-                        </li>
-                    </ul>
-                </nav>
-                {/* CENTERED LOGO */}
-                <div className="main-header__logo">
-                    <Link to="/"><img src={logo} alt="logo" /></Link>
+          <header className="header">
+            <div className="header__container">
+            <div className="header__categories">
+              <NavLink
+                to="/"
+                exact
+                className="header__item"
+                activeClassName="header__item--active"
+              >
+                WOMEN
+              </NavLink>
+              <NavLink
+                to="/men"
+                exact
+                className="header__item"
+                activeClassName="header__item--active"
+              >
+                MEN
+              </NavLink>
+              <NavLink
+                to="/kids"
+                exact
+                className="header__item"
+                activeClassName="header__item--active"
+              >
+                KIDS
+              </NavLink>
+            </div>
+            <div className="header__logo">
+              <Link to="/">
+                <img src={logo} alt="storefront logo" />
+              </Link>
+            </div>
+            <ul className="header__actions">
+              <li onClick={() => this.openCurrency()} className="header__action-item currency-dropdown">
+              
+              
+                { currency.selectedCurrency.symbol }
+                <span className="material-icons-outlined">{ currency.isOpen ? 'expand_less' : 'expand_more' }</span>
+                <ul className={`currency-dropdown__currency-menu ${currency.isOpen ? 'currency-dropdown__currency-menu--open' : ''}`}>
+                  <li className="currency-menu__item">$ USD</li>
+                  <li className="currency-menu__item">€ EUR</li>
+                  <li className="currency-menu__item">¥ JPY</li>
+                </ul>
+              </li>
+              <li className="header__action-item cart-dropdown">
+                <span onClick={() => this.openCart()} className="material-icons-outlined">shopping_cart<span className="badge">{cart.products.length}</span></span>
+                <div className={`cart-dropdown__cart-menu ${cart.isOpen ? 'cart-dropdown__cart-menu--open' : ''}`}>
+                  <h2>
+                    <strong>My Bag,</strong> {cart.products.length} items
+                  </h2>
+                  { cart.products.map(product => {
+                    return (<CartProductTile key={product.id} product={product} />);
+                  }) }
+                  
                 </div>
-                {/* CURRENCY SWITCHER & CART */}
-                <div className="main-header__actions">
-                    <ul className="actions">
-                        <li className="actions__item">
-                            $
-                            <span className="material-font material-icons-outlined">
-                                expand_more
-                            </span>
-                        </li>
-                        <li className="actions__item" onClick={this.toggleCartVisibility}>
-                        <span className="material-font material-icons-outlined"> shopping_cart</span>
-                        <span classname="item__badge">{this.state.cart.cartItems}</span>
-                        <div className={`actions__cart ${this.state.cart.isOpen ? 'actions__cart--open' : ''}`}>
-                            <h2 className="cart__total-items">
-                                <strong>My Bag</strong>, {this.state.cart.cartItems} items
-                            </h2>
-                            <div className="cart__product-tile">
-                                <div className="col col--left">
-                                    <div className="col__top">
-                                        <h3>Apollo Running Short</h3>
-                                        <h4>$50.00</h4>
-                                    </div>
-                                    <div className="col__bottom">
-                                        <button className="btn btn--active">S</button>
-                                        <button className="btn">M</button>
-                                    </div>
-                                </div>
-                                <div className="col col--right">
-                                    <div className="buttons">
-                                        <button className="btn">+</button>
-                                        <span>1</span>
-                                        <button className="btn">-</button>
-                                    </div>
-                                    <img 
-                                        src="https://collectionapi.metmuseum.org/api/collection/v1/iiif/107620/1358492/main-image"
-                                        alt="product"
-                                    />
-                                </div>
-                        </div>
-                        <div className="cart__total">
-                            <span>Total</span>
-                            <span>{this.state.cart.catTotal}</span>
-                        </div>
-                        <div className="cart__actions">
-                            <button className="btn">
-                                VIEW BAG
-                            </button>
-                            <button className="btn btn--primary">
-                                CHECKOUT
-                            </button>
-                            </div>
-                        </div>
-                        </li>
-                    </ul>
-                </div>
-            </header>
-            { this.state.cart.isOpen && <div onClick={this.toggleCartVisibility} className="cart-open-blur"></div>}
-            </>
+              </li>
+            </ul>
+            </div>
+          </header>
         );
+      }
     }
-}
-
-export default Header;
+    
+    const mapStateToProps = state => {
+      return {
+        cart: state.shop.cart,
+        currency: state.shop.currency,
+      };
+    }
+    
+    const mapDispatchToProps = dispatch => {
+      return {
+        toggleCart: () => dispatch(toggleCart()),
+        toggleCurrency: () => dispatch(toggleCurrency()),
+      };
+    }
+    
+    export default connect(mapStateToProps, mapDispatchToProps)(Header);
+    
